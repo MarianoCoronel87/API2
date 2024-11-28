@@ -72,7 +72,7 @@ export default class productoManager{
         try {
             const { title, description, code, price, status, stock, category } = data;
             const ProductoFound = await this.#findOneById(id);
-            const newThumbnails = files?.map((file) => file.filename) || ProductoFound.thumbnails;
+            const newThumbnails = file?.filename;
 
             const producto = {
                 id: ProductoFound.id,
@@ -83,7 +83,7 @@ export default class productoManager{
                 status: status !== undefined ? convertToBoolean(status) : ProductoFound.status,
                 stock: stock !== undefined ? Number(stock) : ProductoFound.stock,
                 category: category || ProductoFound.category,
-                thumbnails: newThumbnails.length > 0 ? newThumbnails : ProductoFound.thumbnails,
+                thumbnails: newThumbnails||ProductoFound.thumbnail,
             };
 
             const index = this.#productos.findIndex((item) => item.id === Number(id));
@@ -91,8 +91,8 @@ export default class productoManager{
             await writeJsonFile(paths.files, this.#jsonFilename, this.#productos);
 
             // Elimina la imagen anterior si es distinta de la nueva
-            if (file?.filename && newThumbnail !== ProductoFound.thumbnail) {
-                await deleteFile(paths.images, productoFound.thumbnail);
+            if (file?.filename && newThumbnails !== ProductoFound.thumbnail) {
+                await deleteFile(paths.images, ProductoFound.thumbnail);
             }
 
             return producto;

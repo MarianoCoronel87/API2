@@ -35,37 +35,37 @@ export default class cartsManager{
             throw new ErrorManager(error.message, error.code);
         }
     }
-    async insertOne(data, file) {
+    async insertOne(data) {
         try {
-            const { title, description, code, price, status, stock, category, thumbnail } = data;
-
-            if (!title || !status || !stock ||!description||!code||!price||!category||!thumbnail ) {
-                throw new ErrorManager("Faltan datos obligatorios", 400);
-            }
-
-            if (!file?.filename) {
-                throw new ErrorManager("Falta el archivo de la imagen", 400);
-            }
-
+            const products = data?.products?.map((item) => {
+                return { idProducto: Number(item.idProducto), quantity: 1 };
+            });
             const cart = {
                 id: generateId(await this.getAll()),
-                title,
-                description,
-                code,
-                price,
-                category,
-                status: convertToBoolean(status),
-                stock: Number(stock),
-                thumbnail: file?.filename,
+                products: products ?? [],
             };
-
             this.#carts.push(cart);
             await writeJsonFile(paths.files, this.#jsonFilename, this.#carts);
-
             return cart;
         } catch (error) {
-            if (file?.filename) await deleteFile(paths.images, file.filename); // Elimina la imagen si ocurre un error
             throw new ErrorManager(error.message, error.code);
         }
     }
+    addOneProduct = async (id, productId) => {
+        try {
+            const cartFound = await this.#findOneById(id);
+            const productIndex = cartFound.products.findIndex((item) => item.idProducto === Number(productId));
+            if (productIndex >= 0) {
+                cartFound.products[productIndex].quantity++;
+            } else {
+                cartFound.products.push({ idProducto: Number(productId), quantity: 1 });
+            }
+            const index = this.#carts.findIndex((item) => item.id === Number(id));
+            this.#carts[index] = cartFound;
+            await writeJsonFile(paths.files, this.#jsonFilename, this.#carts);
+            return cartFound;
+        } catch (error) {
+            throw new ErrorManager(error.message, error.code);
+        }
+    };
 }

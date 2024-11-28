@@ -39,11 +39,20 @@ router.post("/:cid/ingredients/:pid", async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const { quantity } = req.body;
-        const cart = await CartManager.addOneIngredient(cid, pid, quantity || 1);
+        const cart = await CartManager.insertOne(cid, pid, quantity || 1);
         res.status(200).json({ status: "success", payload: cart });
     } catch (error) {
         res.status(error.code || 500).json({ status: "error", message: error.message });
     }
 });
-
+router.post("/:cid/productos/:pid", async (req, res) => {
+    try {
+        const { cid, pid } = req.params;
+        const { quantity } = req.body;
+        const recipe = await recipeManager.addOneProduct(cid, pid, quantity || 1);
+        res.status(200).json({ status: "success", payload: recipe });
+    } catch (error) {
+        res.status(error.code || 500).json({ status: "error", message: error.message });
+    }
+});
 export default router;

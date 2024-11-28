@@ -1,5 +1,6 @@
 import express from "express";
-
+import { config as configHandlebars } from "./config/handlebars.config.js";
+import { config as configWebsocket } from "./config/websocket.config.js";
 // Importación de enrutadores
 import routerCarts from "./routes/carts.routes.js";
 import routerProductos from "./routes/productos.routes.js";
@@ -19,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware para acceder al contenido JSON de las solicitudes
 app.use(express.json());
-
+configHandlebars(app);
 // Declaración de rutas
 app.use("/api/carts", routerCarts);
 app.use("/api/productos", routerProductos);
@@ -28,3 +29,4 @@ app.use("/api/productos", routerProductos);
 app.listen(PORT, () => {
     console.log(`Ejecutándose en http://localhost:${PORT}`);
 });
+configWebsocket(httpServer);
