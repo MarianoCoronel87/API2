@@ -4,6 +4,7 @@ import { config as configWebsocket } from "./config/websocket.config.js";
 // Importación de enrutadores
 import routerCarts from "./routes/carts.routes.js";
 import routerProductos from "./routes/productos.routes.js";
+import routerViewHome from "./routes/home.view.router.js";
 
 // Se crea una instancia de la aplicación Express
 const app = express();
@@ -24,6 +25,7 @@ configHandlebars(app);
 // Declaración de rutas
 app.use("/api/carts", routerCarts);
 app.use("/api/productos", routerProductos);
+app.use("/", routerViewHome);
 
 // Se levanta el servidor oyendo en el puerto definido
 app.listen(PORT, () => {
