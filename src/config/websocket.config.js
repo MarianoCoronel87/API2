@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
-import IngredientManager from "../managers/productoManager.js";
+import productoManager from "../managers/productoManager.js";
 
-const ingredientManager = new IngredientManager();
+const ProductoManager = new productoManager();
 
 // Configura el servidor Socket.IO
 export const config = (httpServer) => {
@@ -12,27 +12,27 @@ export const config = (httpServer) => {
     socketServer.on("connection", async (socket) => {
         console.log("Conexión establecida", socket.id);
 
-        // Envía la lista de ingredientes al conectarse
-        socketServer.emit("ingredients-list", { ingredients: await ingredientManager.getAll() });
+        // Envía la lista de productoes al conectarse
+        socketServer.emit("products-list", { products: await ProductoManager.getAll() });
 
-        socket.on("insert-ingredient", async (data) => {
+        socket.on("insert-producto", async (data) => {
             try {
-                await ingredientManager.insertOne(data);
+                await ProductoManager.insertOne(data);
 
-                // Envía la lista de ingredientes actualizada después de insertar
-                socketServer.emit("ingredients-list", { ingredients: await ingredientManager.getAll() });
+                // Envía la lista de productoes actualizada después de insertar
+                socketServer.emit("products-list", { products: await ProductoManager.getAll() });
             } catch (error) {
                 // Envía el mensaje de error
                 socketServer.emit("error-message", { message: error.message });
             }
         });
 
-        socket.on("delete-ingredient", async (data) => {
+        socket.on("delete-producto", async (data) => {
             try {
-                await ingredientManager.deleteOneById(Number(data.id));
+                await productoManager.deleteOneById(Number(data.id));
 
-                // Envía la lista de ingredientes actualizada después de insertar
-                socketServer.emit("ingredients-list", { ingredients: await ingredientManager.getAll() });
+                // Envía la lista de productoes actualizada después de insertar
+                socketServer.emit("products-list", { products: await ProductoManager.getAll() });
             } catch (error) {
                 // Envía el mensaje de error
                 socketServer.emit("error-message", { message: error.message });

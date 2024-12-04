@@ -1,11 +1,12 @@
 import express from "express";
+import { createServer } from "http";
 import { config as configHandlebars } from "./config/handlebars.config.js";
 import { config as configWebsocket } from "./config/websocket.config.js";
 // Importación de enrutadores
 import routerCarts from "./routes/carts.routes.js";
 import routerProductos from "./routes/productos.routes.js";
 import routerViewHome from "./routes/home.view.router.js";
-
+const httpServer = createServer(app);
 // Se crea una instancia de la aplicación Express
 const app = express();
 
