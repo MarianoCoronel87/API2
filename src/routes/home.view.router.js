@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/realTimeProducts", async (req, res) => {
+router.get("/api/realTimeProducts", async (req, res) => {
     try {
         res.render("realTimeProducts", { title: "Inicio" });
     } catch (error) {

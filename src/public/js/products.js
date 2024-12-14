@@ -1,22 +1,30 @@
-const productsList = document.getElementById("products-list");
-const btnRefreshProductsList = document.getElementById("btn-refresh-products-list");
+const productsList = document.getElementById("product-list");
+const btnRefreshProductList = document.getElementById("btn-refresh-product-list");
 
 const loadProductsList = async () => {
-    const response = await fetch("/api/productos", { method: "GET" });
-    const data = await response.json();
-    const products = data.payload;
+    try {
+        const response = await fetch("/api/productos", { method: "GET" });
+        const data = await response.json();
+        const products = data.payload;
 
-    productsList.innerText = "";
+        productsList.innerText = "";
 
-    products.forEach((producto) => {
-        productsList.innerHTML += `<li>Id: ${producto.id} - Nombre: ${producto.title}</li>`;
-    });
+        products.forEach((producto) => {
+            productsList.innerHTML += `<li>Id: ${producto.id} - Nombre: ${producto.title}</li>`;
+        });
+    } catch (error) {
+        console.error("Error al cargar la lista de productos:", error);
+        const errorMessage = document.getElementById("error-message");
+        if (errorMessage) {
+            errorMessage.innerText = "Hubo un problema al cargar la lista de productos.";
+        }
+    }
 };
 
-btnRefreshProductsList.addEventListener("click", () => {
+btnRefreshProductList.addEventListener("click", () => {
     loadProductsList();
     console.log("¡Lista recargada!");
 });
 
-// Se ejecuta para cargar la lista de ingredientes al ingresar o refrescar
+// Se ejecuta para cargar la lista de productos al ingresar o refrescar
 loadProductsList();

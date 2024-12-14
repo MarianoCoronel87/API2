@@ -23,7 +23,7 @@ productsForm.onsubmit = (event) => {
 
     form.reset();
 
-    socket.emit("insert-product", {
+    socket.emit("insert-producto", {
         title: formData.get("title"),
         status: formData.get("status") || "off",
         stock: formData.get("stock"),
